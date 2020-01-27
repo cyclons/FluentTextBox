@@ -36,6 +36,9 @@ public class FluentTextPanel : MonoBehaviour
         var sizeFitter = HiddenText.gameObject.AddComponent<ContentSizeFitter>();
         sizeFitter.horizontalFit = HorizontalFit;
         sizeFitter.verticalFit = VerticalFit;
+
+        //保证以开始为缩小状态不可见
+        GetComponent<RectTransform>().DOScale(0, 0);
     }
 
     // Start is called before the first frame update
@@ -49,6 +52,16 @@ public class FluentTextPanel : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F))
         {
             ShowNextWord();
+            Show();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Show();
+        }
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            Hide();
         }
     }
 
@@ -65,6 +78,20 @@ public class FluentTextPanel : MonoBehaviour
     public void ChangeWord(string word)
     {
         StartCoroutine(StartChangeWord(word));
+    }
+
+    public void Show()
+    {
+        Sequence se = DOTween.Sequence();
+        se.Append(GetComponent<RectTransform>().DOScale(1.0f, 0.25f));
+        GetComponent<CanvasGroup>().DOFade(1, 0.1f);
+    }
+
+    public void Hide()
+    {
+        Sequence se = DOTween.Sequence();
+        se.Append(GetComponent<RectTransform>().DOScale(1.1f, 0.06f)).Append(GetComponent<RectTransform>().DOScale(0f, 0.25f));
+        GetComponent<CanvasGroup>().DOFade(0, 0.25f);
     }
 
     /// <summary>

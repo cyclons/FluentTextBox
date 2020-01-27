@@ -548,6 +548,7 @@ GameObject:
   - component: {fileID: 2008270558}
   - component: {fileID: 2008270557}
   - component: {fileID: 2008270559}
+  - component: {fileID: 2008270560}
   m_Layer: 5
   m_Name: FluentTextPanel
   m_TagString: Untagged
@@ -574,7 +575,7 @@ RectTransform:
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 516.5, y: 269.2}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &2008270557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -633,8 +634,20 @@ MonoBehaviour:
   - "\u60F3\u53BB\u6413\u9EBB\u5C06"
   - "\u5C0F\u59D0\u59B9\u53EB\u6211\u51FA\u53BB\u901B\u8857\\n\u771F\u5F00\u5FC3\u554A\\n\u51FA\u53BB\u5566"
   - .
+  HorizontalFit: 0
+  VerticalFit: 2
   MaxWidth: 400
   ExtraWidth: 50
   ExtraHeight: 30
-  HorizontalFit: 0
-  VerticalFit: 2
+--- !u!225 &2008270560
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2008270555}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
