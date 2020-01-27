@@ -10,16 +10,32 @@ public class FluentTextPanel : MonoBehaviour
     //更改的字体目标
     public Text TargetText;
     //隐藏的text组件，只用于确定panel需要变换的大小，后期改为自动生成
-    public Text HiddenText;
+    private Text HiddenText;
     public string[] Words;
     private int wordIndex = 0;
+
+    [Header("PanelSetting")]
+    public FitMode HorizontalFit;
+    public FitMode VerticalFit;
     public float MaxWidth = 400;
     public float ExtraWidth = 30;
     public float ExtraHeight = 30;
+
     private Vector2 TargetSize
     {
         get { return GetComponent<RectTransform>().sizeDelta; }
         set { GetComponent<RectTransform>().sizeDelta = value; }
+    }
+
+    private void Awake()
+    {
+        //生成隐藏的Text
+        HiddenText = Instantiate(TargetText.gameObject, this.transform).GetComponent<Text>();
+        HiddenText.gameObject.name = "HiddenText";
+        HiddenText.color = new Color(0, 0, 0, 0);
+        var sizeFitter = HiddenText.gameObject.AddComponent<ContentSizeFitter>();
+        sizeFitter.horizontalFit = HorizontalFit;
+        sizeFitter.verticalFit = VerticalFit;
     }
 
     // Start is called before the first frame update
@@ -43,6 +59,15 @@ public class FluentTextPanel : MonoBehaviour
     }
 
     /// <summary>
+    /// 更新panel中的显示的文字
+    /// </summary>
+    /// <param name="word"></param>
+    public void ChangeWord(string word)
+    {
+        StartCoroutine(StartChangeWord(word));
+    }
+
+    /// <summary>
     /// 传入所需要显示的话并更新panel大小
     /// </summary>
     /// <param name="changeWord"></param>
@@ -58,8 +83,10 @@ public class FluentTextPanel : MonoBehaviour
         TargetText.DOText(changeWord, textTime).SetEase(Ease.Linear);
     }
 
-    //刷新文字panel以及文字本身大小
-    public void RefreshSize()
+    /// <summary>
+    /// 刷新文字panel以及文字本身大小
+    /// </summary>
+    private void RefreshSize()
     {
         var textPanelSize = GetPreferredSize(HiddenText.gameObject);
         //隐藏panel的原大小
@@ -76,8 +103,10 @@ public class FluentTextPanel : MonoBehaviour
 
     }
 
-    //立即获取ContentSizeFitter的区域
-    public Vector2 GetPreferredSize(GameObject obj)
+    /// <summary>
+    /// 立即获取ContentSizeFitter的区域
+    /// </summary>
+    private Vector2 GetPreferredSize(GameObject obj)
     {
         //刷新网格
         LayoutRebuilder.ForceRebuildLayoutImmediate(obj.GetComponent<RectTransform>());
@@ -86,9 +115,11 @@ public class FluentTextPanel : MonoBehaviour
 
         return new Vector2(HandleSelfFittingAlongAxis(0, obj), HandleSelfFittingAlongAxis(1, obj));
     }
-    
-    //获取隐藏panel的宽或高
-    private float HandleSelfFittingAlongAxis(int axis, GameObject obj)
+
+    /// <summary>
+    /// 获取隐藏panel的宽或高
+    /// </summary>
+    private float HandleSelfFittingAlongAxis(int axis, GameObject obj)
     {
         //获取当前隐藏panel选择的适配模式
         FitMode fitting = (axis == 0 ? obj.GetComponent<ContentSizeFitter>().horizontalFit : obj.GetComponent<ContentSizeFitter>().verticalFit);
@@ -107,7 +138,9 @@ public class FluentTextPanel : MonoBehaviour
         }
     }
 
-    //刷新隐藏文字和显示文字的宽，如果偏大就设置为最大值，如果偏小就缩小为合适的宽度
+    /// <summary>
+    /// 刷新隐藏文字和显示文字的宽，如果偏大就设置为最大值，如果偏小就缩小为合适的宽度
+    /// </summary>
     private void RefreshPanelSize(GameObject obj)
     {
         if (LayoutUtility.GetPreferredSize(obj.GetComponent<RectTransform>(), 0) < MaxWidth)
